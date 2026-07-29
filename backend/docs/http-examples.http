@@ -1,0 +1,76 @@
+### Health
+GET http://localhost:3333/api/health
+
+### Busca global
+GET http://localhost:3333/api/search?q=notegeo659&type=Todos
+
+### Fila de chamados
+GET http://localhost:3333/api/chamados/fila
+
+### Detalhe do chamado
+GET http://localhost:3333/api/chamados/CH000101
+
+### Alterar responsável
+PATCH http://localhost:3333/api/chamados/CH000101/responsavel
+Content-Type: application/json
+
+{
+  "responsavel": "Analista Teste 001"
+}
+
+### Alterar status
+PATCH http://localhost:3333/api/chamados/CH000101/status
+Content-Type: application/json
+
+{
+  "status": "Em atendimento"
+}
+
+### Pesquisar ativos
+GET http://localhost:3333/api/ativos?q=notegeo
+
+### Próximos ativos por prefixo
+GET http://localhost:3333/api/ativos/prefix/NOTEGEO/next?quantity=5
+
+### Criar ativo único
+POST http://localhost:3333/api/ativos
+Content-Type: application/json
+
+{
+  "nome": "NOTEGEO660",
+  "tipo": "Notebook",
+  "status": "Estoque",
+  "fabricante": "Dell",
+  "modelo": "Latitude 3550",
+  "serial": "PENDENTE",
+  "patrimonio": "PENDENTE",
+  "empresa": "GEO"
+}
+
+### Criar ativos em lote
+POST http://localhost:3333/api/ativos/batch
+Content-Type: application/json
+
+{
+  "prefix": "NOTEGEO",
+  "quantity": 3,
+  "base": {
+    "tipo": "Notebook",
+    "status": "Estoque",
+    "fabricante": "Dell",
+    "modelo": "Latitude 3550",
+    "empresa": "GEO"
+  }
+}
+
+### Clonar ativo
+POST http://localhost:3333/api/ativos/NOTEGEO659/clone
+Content-Type: application/json
+
+{}
+
+### Backups
+GET http://localhost:3333/api/backups
+
+### Marcar etapa de finalização do backup
+POST http://localhost:3333/api/backups/1/finalizacao/emailGestor
