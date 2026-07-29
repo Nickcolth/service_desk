@@ -1,0 +1,9 @@
+Coloque aqui o arquivo oficial:
+
+F-TI-16.r08_CHECK_LIST_DE_PREPARACAO_DE_EQUIPAMENTO.xlsx
+
+O backend vai usar esse arquivo como template para gerar:
+
+Check List_NOMEDONOTE_DATA.xlsx
+
+Motivo: o modelo oficial é binário .xlsx. O front-end não deve tentar redesenhar esse arquivo, porque perde layout, mesclagem, bordas e formatação.
