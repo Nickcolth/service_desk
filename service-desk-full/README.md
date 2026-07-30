@@ -2,20 +2,30 @@
 
 Estrutura separada para o projeto real do Service Desk.
 
-Esta pasta deixa o protótipo de um arquivo só para trás e separa o sistema em:
+O site ficou focado somente em:
+
+- Preparação de Máquina;
+- Backup.
+
+A parte de Sistema de Chamados não fica mais no site porque virou extensão para Edge/Chrome.
+
+## Estrutura
 
 ```text
 service-desk-full/
 ├─ frontend/
 │  ├─ index.html
 │  ├─ package.json
+│  ├─ server-static.js
 │  └─ src/
 │     ├─ main.js
 │     └─ styles.css
 └─ backend/
    ├─ package.json
-   └─ src/
-      └─ server.js
+   ├─ src/
+   │  └─ server.js
+   └─ templates/
+      └─ F-TI-16.r08_CHECK_LIST_DE_PREPARACAO_DE_EQUIPAMENTO.xlsx
 ```
 
 ## Rodar localmente
@@ -28,26 +38,34 @@ npm install
 npm run dev
 ```
 
-Front:
+Front simples, sem Vite:
 
 ```powershell
 cd service-desk-full/frontend
-npm install
 npm run dev
 ```
 
-## O que já está separado
+Também pode abrir pelo Live Server do VS Code.
 
-- Front-end separado do back-end.
-- Dados mockados centralizados na API.
-- Tela de preparações.
-- Detalhe de preparação com fluxo de funções.
-- Chamado de expedição, envio, recolhimento para troca, comodato e checklist.
-- Tela de ativos com edição direta, salvar e clonar.
-- Endpoint de checklist preparado para gerar Excel pelo backend.
+## Produção em Linux
+
+Em produção, o front pode ser servido como arquivo estático pelo Nginx, Apache ou IIS. O backend Node/Express roda separado e recebe as chamadas em `/api`.
+
+Exemplo:
+
+```text
+https://servicedesk.empresa.local/       -> frontend estático
+https://servicedesk.empresa.local/api    -> backend Node/Express
+```
 
 ## Checklist
 
 O caminho correto é o backend gerar o arquivo. O front apenas chama a API e baixa/anexa o resultado.
 
-Na versão final, o arquivo original `F-TI-16.r08_CHECK_LIST_DE_PREPARACAO_DE_EQUIPAMENTO.xlsx` deve ficar no backend como template oficial para preservar exatamente o layout original.
+Para preservar exatamente o layout original, coloque o modelo oficial em:
+
+```text
+service-desk-full/backend/templates/F-TI-16.r08_CHECK_LIST_DE_PREPARACAO_DE_EQUIPAMENTO.xlsx
+```
+
+Se o arquivo existir, o backend preenche esse modelo. Se não existir, ele gera um fallback básico.
