@@ -1,14 +1,12 @@
 {
-  "name": "service-desk-frontend",
-  "version": "0.2.0",
+  "name": "service-desk-frontend-static",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview"
+    "dev": "node server-static.js",
+    "start": "node server-static.js"
   },
-  "dependencies": {
-    "vite": "^5.4.0"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }
