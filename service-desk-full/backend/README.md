@@ -1,6 +1,12 @@
 # Service Desk Backend
 
-API separada do Service Desk.
+API separada para os módulos do site:
+
+- Preparação de Máquina;
+- Backup;
+- geração do checklist F-TI-16.
+
+A tela geral de chamados não fica mais aqui porque virou extensão para Edge/Chrome.
 
 ## Rodar
 
@@ -19,15 +25,15 @@ http://localhost:3333/api
 ## Endpoints
 
 ```http
-GET  /api/health
-GET  /api/dashboard
-GET  /api/chamados
-GET  /api/preparacoes
-GET  /api/ativos
-PATCH /api/ativos/:id
-POST /api/ativos/:id/clone
-GET  /api/search?q=notebook
-POST /api/preparacoes/:id/checklist
+GET   /api/health
+GET   /api/dashboard
+GET   /api/preparacoes
+PATCH /api/preparacoes/:id
+GET   /api/backups
+PATCH /api/backups/:id
+POST  /api/backups/:id/finalizacao/:etapa
+GET   /api/ativos
+POST  /api/preparacoes/:id/checklist
 ```
 
 ## Checklist F-TI-16
