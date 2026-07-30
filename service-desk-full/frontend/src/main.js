@@ -13,7 +13,8 @@ const state = {
   prepTab: 'dados',
   selectedBackupId: null,
   backupFinish: false,
-  backupDraft: null
+  backupDraft: null,
+  theme: localStorage.getItem('serviceDeskTheme') || 'light'
 };
 
 const data = {
@@ -93,6 +94,24 @@ const today = () => new Date().toLocaleDateString('pt-BR');
 const isoToday = () => new Date().toISOString().slice(0, 10);
 const safeName = value => String(value || 'SEM_NOTE').trim().replace(/[^a-z0-9]+/gi, '_').replace(/^_+|_+$/g, '') || 'SEM_NOTE';
 
+function applyTheme() {
+  document.documentElement.dataset.theme = state.theme;
+}
+
+function toggleTheme() {
+  state.theme = state.theme === 'dark' ? 'light' : 'dark';
+  localStorage.setItem('serviceDeskTheme', state.theme);
+  applyTheme();
+  render();
+}
+
+function themeButton() {
+  const isDark = state.theme === 'dark';
+  return `<button class="theme-toggle" data-theme-toggle aria-label="Alternar modo claro e escuro">
+    <span>${isDark ? '☀' : '☾'}</span><span>${isDark ? 'Modo claro' : 'Modo escuro'}</span>
+  </button>`;
+}
+
 function toast(message) {
   toastEl.textContent = message;
   toastEl.classList.add('show');
@@ -101,7 +120,10 @@ function toast(message) {
 
 function shell(content) {
   return `<div class="layout">
-    <header class="top"><div class="brand"><span class="brand-icon">S</span><span>Service Desk</span></div><div class="top-note">Site: Preparação de Máquina e Backup</div></header>
+    <header class="top">
+      <div class="brand"><span class="brand-icon">S</span><span>Service Desk</span></div>
+      <div class="top-actions"><div class="top-note">Preparação de Máquina e Backup</div>${themeButton()}</div>
+    </header>
     <aside class="side">
       ${nav('dashboard', '⌂', 'Início')}
       ${nav('preparacoes', '▣', 'Preparação de Máquina')}
@@ -128,6 +150,7 @@ function bindNav() {
   document.querySelectorAll('[data-nav]').forEach(button => {
     button.onclick = () => setPage(button.dataset.nav);
   });
+  document.querySelector('[data-theme-toggle]')?.addEventListener('click', toggleTheme);
 }
 
 function dashboard() {
@@ -341,6 +364,7 @@ function backupFinishView(draft) {
 }
 
 function render() {
+  applyTheme();
   if (state.page === 'dashboard') app.innerHTML = dashboard();
   if (state.page === 'preparacoes') app.innerHTML = state.selectedPrepId ? prepDetailPage() : preparacoesPage();
   if (state.page === 'backup') app.innerHTML = state.selectedBackupId ? backupDetailPage() : backupPage();
@@ -402,4 +426,5 @@ function saveBackupDraft() {
   }
 }
 
+applyTheme();
 render();
