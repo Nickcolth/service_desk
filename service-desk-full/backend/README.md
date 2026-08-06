@@ -22,7 +22,7 @@ A API sobe em:
 http://localhost:3333/api
 ```
 
-## Endpoints
+## Endpoints usados pelo site
 
 ```http
 GET   /api/health
@@ -32,8 +32,15 @@ PATCH /api/preparacoes/:id
 GET   /api/backups
 PATCH /api/backups/:id
 POST  /api/backups/:id/finalizacao/:etapa
-GET   /api/ativos
 POST  /api/preparacoes/:id/checklist
+```
+
+## Endpoints de apoio
+
+Algumas integrações futuras ainda podem precisar consultar ou atualizar dados de ativos por API, mas isso não representa uma página de Ativos no site.
+
+```http
+GET /api/ativos
 ```
 
 ## Checklist F-TI-16
