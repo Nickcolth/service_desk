@@ -2,116 +2,104 @@
 
 ## Objetivo
 
-Criar uma aplicação web interna para o Service Desk com:
+Criar uma aplicação web interna para os fluxos que permanecem no site:
 
-- front-end melhor para preparação de máquinas;
+- preparação de máquinas;
 - backup;
-- sistema de chamados;
-- fila de atendimento;
-- pesquisa global;
-- gestão de ativos;
-- API própria;
-- banco próprio de busca no futuro.
+- geração do checklist F-TI-16;
+- integrações futuras de apoio, como abertura de chamados, anexos e atualização de inventário por API.
 
-## Desenho lógico
+A tela geral de Sistema de Chamados saiu do site. Esse módulo passa a ficar na extensão para Edge/Chrome.
+
+## Separação do projeto
 
 ```text
-Front-end Service Desk
-        ↓
-API própria
-        ↓
-Banco próprio de busca / indexação
-        ↓
-Integrações externas
-- Znuny
-- Service Up
-- SharePoint
-- base oficial de ativos
+Usuário
+  ↓
+Frontend estático
+  ↓
+Backend/API
+  ↓
+Banco, arquivos, automações e integrações futuras
 ```
 
-## Motivo da API própria
+## Frontend
 
-A tela não deve depender diretamente do Znuny, Service Up ou qualquer outra ferramenta de chamados.
+O frontend fica simples, usando HTML, CSS e JavaScript.
 
-O front-end chama sempre a API própria. Se o sistema de chamados mudar no futuro, a alteração fica concentrada no backend/provider.
+Responsabilidades:
+
+- exibir fila de preparações;
+- exibir detalhes da preparação;
+- controlar o fluxo de envio, expedição, recolhimento, comodato e checklist;
+- exibir fila de backups;
+- exibir detalhes e finalização do backup;
+- chamar a API para gerar o checklist;
+- alternar entre modo claro e modo escuro.
+
+## Backend
+
+O backend em Node.js/Express fica responsável por tudo que não deve ficar no navegador.
+
+Responsabilidades:
+
+- gerar checklist Excel a partir do modelo oficial;
+- receber dados do front;
+- futuramente consultar banco;
+- futuramente abrir chamados de apoio por integração;
+- futuramente anexar arquivos;
+- futuramente atualizar inventário.
+
+## Módulos ativos do site
+
+### Preparação de Máquina
+
+Fluxo usado para admissão e troca de equipamento.
+
+Etapas previstas:
+
+1. Dados da preparação;
+2. Definição se haverá envio;
+3. Nota de expedição;
+4. Chamado de envio;
+5. Chamado de recolhimento, quando for troca;
+6. Chamado de comodato;
+7. Checklist F-TI-16.
+
+### Backup
+
+Fluxo usado para controlar backup e finalização do ativo.
+
+Etapas previstas:
+
+1. Dados do backup;
+2. Enviar e-mail para gestor;
+3. Encerrar chamado;
+4. Abrir chamado para Redes;
+5. Desvincular colaborador do ativo;
+6. Definir destino do ativo.
+
+## Módulo removido do site
+
+### Sistema de Chamados
+
+Não faz mais parte do site porque virou extensão para Edge/Chrome.
+
+O site pode continuar chamando APIs relacionadas a chamados quando precisar abrir, encerrar ou anexar algo como parte de Preparação ou Backup, mas não existe mais página geral de fila de chamados no front.
+
+## Publicação em Linux
+
+Modelo sugerido:
 
 ```text
-frontend → chamadoService → API própria → provider atual
+Nginx
+├─ serve frontend estático
+└─ proxy /api para Node.js/Express
 ```
-
-Providers futuros:
-
-```text
-providers/
-├── mockProvider
-├── znunyProvider
-├── serviceUpProvider
-└── novoSistemaProvider
-```
-
-## Busca global
-
-A busca não deve funcionar como o Znuny, onde o usuário precisa escolher exatamente o campo.
-
-A busca deve procurar em múltiplos campos ao mesmo tempo:
-
-- número do chamado;
-- título;
-- descrição;
-- histórico;
-- solicitante;
-- e-mail;
-- máquina;
-- serial;
-- patrimônio;
-- empresa;
-- fila;
-- status;
-- responsável;
-- nota fiscal.
-
-## Ativos
-
-O módulo de ativos deve permitir:
-
-- pesquisar ativo;
-- criar ativo;
-- editar ativo;
-- excluir ativo;
-- clonar ativo;
-- criar ativos em lote;
-- sugerir próximo número por prefixo.
 
 Exemplo:
 
 ```text
-Prefixo: NOTEGEO
-Último encontrado: NOTEGEO659
-Próximo sugerido: NOTEGEO660
-Quantidade: 5
-Gerar:
-- NOTEGEO660
-- NOTEGEO661
-- NOTEGEO662
-- NOTEGEO663
-- NOTEGEO664
+https://servicedesk.empresa.local      → frontend
+https://servicedesk.empresa.local/api  → backend
 ```
-
-## Segurança futura
-
-A aplicação deve ser preparada para Microsoft Entra ID:
-
-```text
-Usuário loga com SSO
-        ↓
-Front-end envia token/sessão para API
-        ↓
-API valida usuário e grupos
-        ↓
-API aplica permissões
-        ↓
-API consulta banco/sistemas externos
-```
-
-Não enviar senha do usuário para API.
-Não colocar credenciais no front-end.
