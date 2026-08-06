@@ -1,57 +1,58 @@
 # Service Desk
 
-Projeto interno para protótipo web e API própria do Service Desk.
+Projeto interno do Service Desk focado nos módulos que ainda pertencem ao site:
 
-## Estrutura
+- Preparação de Máquina;
+- Backup;
+- geração do checklist F-TI-16 pelo backend.
+
+A parte de Sistema de Chamados não fica mais neste site porque virou extensão para Edge/Chrome.
+
+## Estrutura atual
 
 ```text
 service_desk/
-├── frontend/
-│   └── index.html
-├── backend/
-│   ├── src/
-│   ├── docs/
-│   ├── package.json
-│   └── README.md
-├── docs/
-└── .gitignore
+├── service-desk-full/
+│   ├── frontend/
+│   │   ├── index.html
+│   │   ├── server-static.js
+│   │   └── src/
+│   │       ├── main.js
+│   │       └── styles.css
+│   └── backend/
+│       ├── src/server.js
+│       ├── package.json
+│       ├── README.md
+│       └── templates/
+└── docs/
+    └── arquitetura.md
 ```
 
-## Front-end
+## Rodar localmente
 
-O protótipo atual está em:
-
-```text
-frontend/index.html
-```
-
-Para abrir, basta executar o arquivo no navegador.
-
-## Back-end / API
-
-A API está em:
-
-```text
-backend/
-```
-
-Para rodar:
+Backend/API:
 
 ```powershell
-cd backend
+cd service-desk-full/backend
 npm install
-copy .env.example .env
 npm run dev
 ```
 
-Teste:
+Frontend estático:
 
 ```powershell
-curl http://localhost:3333/api/health
+cd service-desk-full/frontend
+npm run dev
 ```
 
-## Observações
+Também dá para abrir o front pelo Live Server do VS Code.
 
-- Tudo está usando dados mockados/local state.
-- Não há integração real com Znuny, Service Up, SharePoint ou banco externo ainda.
-- A estrutura já foi pensada para futuramente usar API própria, banco próprio de busca e SSO Microsoft/Entra ID.
+## Checklist
+
+Para o checklist sair com o layout oficial, coloque o modelo original neste caminho:
+
+```text
+service-desk-full/backend/templates/F-TI-16.r08_CHECK_LIST_DE_PREPARACAO_DE_EQUIPAMENTO.xlsx
+```
+
+O front chama o backend para gerar e baixar o arquivo preenchido.
